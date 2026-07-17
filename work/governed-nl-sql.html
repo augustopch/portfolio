@@ -1,1 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Governed NL→SQL Agent — Augusto Peña</title>
+<meta name="description" content="A natural-language-to-SQL agent where the model interprets and deterministic code executes, validates, and logs — built for regulated finance.">
+<style>
+  :root{
+    --ink:#0c1420; --panel:#101b29; --bone:#e4eaf1; --muted:#7d8a9b;
+    --slate:#8aa6c0; --ice:#7db3d8; --line:#22303f;
+    --serif:Georgia,'Iowan Old Style',serif;
+    --sans:ui-sans-serif,system-ui,-apple-system,sans-serif;
+    --mono:'SF Mono',ui-monospace,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+  body{background:var(--ink);color:var(--bone);font-family:var(--serif);-webkit-font-smoothing:antialiased;line-height:1.5}
+  .wrap{max-width:42rem;margin:0 auto;padding:0 1.5rem}
 
+  header{display:flex;justify-content:space-between;align-items:center;padding:1.6rem 0;border-bottom:1px solid var(--line)}
+  .mark{font-size:1rem;letter-spacing:-.01em;text-decoration:none;color:var(--bone)}
+  .back{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);text-decoration:none}
+  .back:hover{color:var(--ice)}
+
+  .head{padding:3rem 0 0;opacity:0;transform:translateY(8px);animation:rise .9s cubic-bezier(.2,.7,.2,1) .1s forwards}
+  .cat{font-family:var(--mono);font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ice);margin-bottom:1.1rem}
+  h1{font-size:clamp(1.9rem,6vw,2.6rem);font-weight:400;letter-spacing:-.02em;line-height:1.08}
+  .lede{font-family:var(--serif);color:var(--muted);font-size:1.05rem;line-height:1.6;margin-top:1rem;max-width:56ch}
+  .rule{height:1px;margin:1.6rem 0;background:linear-gradient(90deg,var(--ice) 0%,rgba(125,179,216,.4) 45%,rgba(125,179,216,0) 100%)}
+
+  .metabar{font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;color:var(--slate);text-transform:uppercase;display:flex;flex-wrap:wrap;gap:.4rem 0;line-height:1.9}
+  .metabar .k{color:var(--muted)}
+  .metabar a{color:var(--bone);text-decoration:none;border-bottom:1px solid var(--ice);padding-bottom:1px}
+  .metabar a:hover{color:var(--ice)}
+  .metabar .sep{color:var(--line);margin:0 .7rem}
+
+  section.body{padding:2.4rem 0}
+  section.body h2{font-family:var(--mono);font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);font-weight:400;margin:2rem 0 .9rem}
+  section.body h2:first-child{margin-top:0}
+  section.body p{font-family:var(--serif);color:var(--bone);font-size:1rem;line-height:1.75;margin-bottom:1rem;max-width:58ch}
+  section.body p.q{color:var(--muted)}
+  ul{list-style:none;font-family:var(--serif);font-size:1rem;line-height:1.7;max-width:58ch;margin-bottom:1rem}
+  ul li{padding-left:1.3rem;position:relative;margin-bottom:.5rem;color:var(--bone)}
+  ul li::before{content:"→";position:absolute;left:0;color:var(--ice)}
+
+  .figure{border:1px solid var(--line);border-radius:6px;background:var(--panel);padding:2.6rem 1.5rem;text-align:center;font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:1.4rem 0}
+
+  footer{padding:2.4rem 0 3.2rem;border-top:1px solid var(--line);font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;color:var(--muted);display:flex;justify-content:space-between;flex-wrap:wrap;gap:.8rem}
+  footer a{color:var(--bone);text-decoration:none;border-bottom:1px solid var(--ice);padding-bottom:1px}
+
+  @keyframes rise{to{opacity:1;transform:none}}
+  @media(prefers-reduced-motion:reduce){.head{animation:none;opacity:1;transform:none}}
+  :focus-visible{outline:2px solid var(--ice);outline-offset:3px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <a class="mark" href="../index.html">Augusto&nbsp;Peña</a>
+    <a class="back" href="../index.html">← Work</a>
+  </header>
+
+  <div class="head">
+    <p class="cat">Structured data · Agent</p>
+    <h1>Governed NL→SQL Agent</h1>
+    <p class="lede">Ask a question in plain language; get a validated, logged SQL answer. The model interprets — deterministic code executes.</p>
+    <div class="rule"></div>
+    <div class="metabar">
+      <span><span class="k">Role</span>&nbsp; Design &amp; build</span><span class="sep">·</span>
+      <span><span class="k">Stack</span>&nbsp; Python, SQL, LLM orchestration</span><span class="sep">·</span>
+      <span><a href="#">Code ↗</a></span><span class="sep">·</span>
+      <span><a href="#">Live demo ↗</a></span>
+    </div>
+  </div>
+
+  <section class="body">
+    <h2>The problem</h2>
+    <p>Natural-language querying is compelling, but in regulated finance you cannot ship a black box that writes and runs its own SQL against production data. Every answer has to be explainable, reproducible, and logged. The interesting question isn’t “can an LLM write SQL” — it’s “how do you let it help without handing it the keys.”</p>
+
+    <h2>Approach</h2>
+    <p>The core stance is a division of labour: <strong>the model interprets, deterministic code executes.</strong> The LLM classifies intent and drafts a candidate query. From there, ordinary Python and SQL take over — the parts you can test, prove, and audit.</p>
+    <ul>
+      <li>Intent classification and query drafting handled by the model, constrained to a known schema.</li>
+      <li>Generated SQL passed through deterministic validation before it ever touches the database.</li>
+      <li>Read-only execution against a scoped surface — no writes, no unbounded scans.</li>
+      <li>Every step — prompt, draft, validation result, final query, rows returned — written to an audit log.</li>
+    </ul>
+
+    <h2>Architecture</h2>
+    <p>A thin orchestration layer routes each request through interpret → validate → execute → log. The model never runs anything directly; it proposes, and the deterministic pipeline disposes. That boundary is the whole design, and it’s what makes the system defensible in a regulated setting.</p>
+    <div class="figure">Architecture diagram — interpret · validate · execute · log</div>
+
+    <h2>What it demonstrates</h2>
+    <p class="q">This is the atomic unit the rest of my work is built on. It shows LLM flexibility without surrendering auditability — the exact trade a bank’s controls function needs met before natural-language tooling can go near real data. The same pattern scales up into the multi-agent AML assistant.</p>
+  </section>
+
+  <footer>
+    <a href="../index.html">← All work</a>
+    <a href="mailto:augusto@augustopena.io">augusto@augustopena.io</a>
+  </footer>
+
+</div>
+</body>
+</html>
