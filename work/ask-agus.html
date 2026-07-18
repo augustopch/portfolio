@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ask AGUS — Augusto Peña</title>
+<meta name="description" content="A governed multi-agent assistant for AML and financial-crime regulatory work: supervisor, retrieval, structured-data and analytics sub-agents, a validation judge and human-in-the-loop over an auditable trail.">
+<style>
+  :root{
+    --ink:#0c1420; --panel:#101b29; --bone:#e4eaf1; --muted:#7d8a9b;
+    --slate:#8aa6c0; --ice:#7db3d8; --line:#22303f;
+    --serif:Georgia,'Iowan Old Style',serif;
+    --mono:'SF Mono',ui-monospace,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+  body{background:var(--ink);color:var(--bone);font-family:var(--serif);-webkit-font-smoothing:antialiased;line-height:1.5}
+  .wrap{max-width:42rem;margin:0 auto;padding:0 1.5rem}
+  header{display:flex;justify-content:space-between;align-items:center;padding:1.6rem 0;border-bottom:1px solid var(--line)}
+  .mark{font-size:1rem;letter-spacing:-.01em;text-decoration:none;color:var(--bone)}
+  .back{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);text-decoration:none}
+  .back:hover{color:var(--ice)}
+  .head{padding:3rem 0 0;opacity:0;transform:translateY(8px);animation:rise .9s cubic-bezier(.2,.7,.2,1) .1s forwards}
+  .cat{font-family:var(--mono);font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ice);margin-bottom:1.1rem}
+  h1{font-size:clamp(1.9rem,6vw,2.6rem);font-weight:400;letter-spacing:-.02em;line-height:1.08}
+  .lede{color:var(--muted);font-size:1.05rem;line-height:1.6;margin-top:1rem;max-width:56ch}
+  .rule{height:1px;margin:1.6rem 0;background:linear-gradient(90deg,var(--ice) 0%,rgba(125,179,216,.4) 45%,rgba(125,179,216,0) 100%)}
+  .metabar{font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;color:var(--slate);text-transform:uppercase;display:flex;flex-wrap:wrap;gap:.4rem 0;line-height:1.9}
+  .metabar .k{color:var(--muted)}
+  .metabar .wip{color:#c9a34e}
+  .metabar .sep{color:var(--line);margin:0 .7rem}
+  section.body{padding:2.4rem 0}
+  section.body h2{font-family:var(--mono);font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);font-weight:400;margin:2rem 0 .9rem}
+  section.body h2:first-child{margin-top:0}
+  section.body p{font-size:1rem;line-height:1.75;margin-bottom:1rem;max-width:58ch}
+  section.body p.q{color:var(--muted)}
+  ul{list-style:none;font-size:1rem;line-height:1.7;max-width:58ch;margin-bottom:1rem}
+  ul li{padding-left:1.3rem;position:relative;margin-bottom:.5rem}
+  ul li::before{content:"→";position:absolute;left:0;color:var(--ice)}
+  .figure{border:1px solid var(--line);border-radius:6px;background:var(--panel);padding:2.6rem 1.5rem;text-align:center;font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:1.4rem 0}
+  .note{font-family:var(--mono);font-size:.72rem;letter-spacing:.04em;color:var(--muted);border-left:2px solid var(--line);padding-left:.9rem;margin:1.2rem 0;line-height:1.7}
+  footer{padding:2.4rem 0 3.2rem;border-top:1px solid var(--line);font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;color:var(--muted);display:flex;justify-content:space-between;flex-wrap:wrap;gap:.8rem}
+  footer a{color:var(--bone);text-decoration:none;border-bottom:1px solid var(--ice);padding-bottom:1px}
+  @keyframes rise{to{opacity:1;transform:none}}
+  @media(prefers-reduced-motion:reduce){.head{animation:none;opacity:1;transform:none}}
+  :focus-visible{outline:2px solid var(--ice);outline-offset:3px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <a class="mark" href="../index.html">Augusto&nbsp;Peña</a>
+    <a class="back" href="../index.html">← Work</a>
+  </header>
+
+  <div class="head">
+    <p class="cat">Multi-agent system</p>
+    <h1>Ask AGUS</h1>
+    <p class="lede">A governed multi-agent assistant for AML and financial-crime regulatory work. A supervisor delegates to retrieval, structured-data and analytics sub-agents, a judge validates the answer, and a human stays in the loop over an auditable trail.</p>
+    <div class="rule"></div>
+    <div class="metabar">
+      <span><span class="k">Role</span>&nbsp; Architecture &amp; build</span><span class="sep">·</span>
+      <span><span class="k">Stack</span>&nbsp; Multi-agent orchestration, RAG, governed NL→SQL, deterministic validation</span><span class="sep">·</span>
+      <span><span class="wip">● In progress</span></span>
+    </div>
+  </div>
+
+  <section class="body">
+    <h2>The origin</h2>
+    <p>I had been arguing for a particular shape of system in regulated finance: a supervisor that interprets intent and delegates, specialised sub-agents that each do one job, a judge that validates, and a human who stays in the loop for anything consequential. Then a major financial institution publicly presented a governed multi-agent assistant of its own, and the topology mirrored the one I had been proposing. That was the confirmation. The pattern is where regulated finance is heading rather than a bet against it.</p>
+    <p>Ask AGUS is my version, aimed at the domain I actually work in.</p>
+
+    <h2>Grounded in real delivery</h2>
+    <p>This is not a generic AML demo. It generalises an approach I proved on a live AMLA 2026 regulatory delivery, where I designed the architecture and led the data workstream, partially automating the submission and laying the basis for future ones. The specifics of that work are regulated and stay out of scope here. What carries over is the method.</p>
+    <div class="note">Details of the underlying regulatory delivery are withheld. This page describes the general architecture and the transferable approach, not any confidential system, dataset, or submission.</div>
+
+    <h2>Approach</h2>
+    <p>The governing principle is the same one that runs through everything I build: <strong>the LLM interprets, the system validates, deterministic tools execute, and logs prove it.</strong> No agent touches data or takes an action without that boundary in place.</p>
+    <ul>
+      <li>A supervisor agent reads intent, plans, routes to the right sub-agent, and knows when to stop and ask a human.</li>
+      <li>A retrieval agent works over approved regulatory and policy text, scoped to trusted sources.</li>
+      <li>A structured-data agent, the governed NL→SQL unit already built and adversarially tested, turns questions into validated and logged queries.</li>
+      <li>An analytics agent runs deterministic checks and typology logic, not free-form model output.</li>
+      <li>A judge validates answers before they surface; a human-in-the-loop gate holds anything high-stakes.</li>
+      <li>Every hop is written to an audit trail, which is what a controls function needs before any of this goes near real work.</li>
+    </ul>
+
+    <h2>What is already built</h2>
+    <p>The honest status matters more than the ambition. This is a system under construction, and the first block is finished rather than sketched.</p>
+    <ul>
+      <li><strong>Block one, shipped.</strong> The <a href="governed-nl-sql.html" style="color:var(--bone);border-bottom:1px solid var(--ice);text-decoration:none">governed NL&#8594;SQL agent</a> is the structured-data sub-agent, running now with a fixed output contract, five deterministic gates, policy enforcement and an append-only audit trail. Eleven of eleven gates hold under adversarial testing.</li>
+      <li><strong>Block two, in progress.</strong> Retrieval over approved regulatory and policy text, scoped to trusted sources.</li>
+      <li><strong>Block three, next.</strong> The supervisor and routing layer, then the analytics agent for deterministic typology checks.</li>
+      <li><strong>Block four, the research problem.</strong> A judge reliable enough to catch a wrong financial answer rather than merely a malformed one. This is the genuinely hard part and I am not going to pretend otherwise.</li>
+    </ul>
+    <p>The sequence is deliberate. Each block is governed and tested before the next one leans on it, which is slower than building the whole graph and debugging it afterwards, and considerably more likely to survive a review.</p>
+
+    <h2>Architecture</h2>
+    <p>It is the recognised supervisor, sub-agent, judge and human-in-the-loop topology, applied to financial-crime work and built governance-first. The audit and control layer is the reason the system is allowed to exist at all, so it comes first rather than last.</p>
+    <div class="figure">Architecture diagram: supervisor · retrieval · structured data · analytics · judge · human</div>
+
+    <h2>What it demonstrates</h2>
+    <p class="q">Plenty of people have built a multi-agent system. Fewer have designed and delivered regulated AML work first and then built a <em>governed</em> one, where auditability and control are the point rather than the constraint. That intersection of regulatory delivery experience and the engineering is the part that is hard to copy.</p>
+  </section>
+
+  <footer>
+    <a href="../index.html">← All work</a>
+    <a href="mailto:augusto@augustopena.io">augusto@augustopena.io</a>
+  </footer>
+
+</div>
+</body>
+</html>

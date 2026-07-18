@@ -57,7 +57,7 @@
   <div class="head">
     <p class="cat">Teaching · Interactive</p>
     <h1>Molecular</h1>
-    <p class="lede">An interactive series that teaches governed AI orchestration by turning each topic into a molecule — atoms are concepts, bonds are dependency and control relationships.</p>
+    <p class="lede">Twenty interactive topics arguing that in regulated analytics the model is the cheap part, and that the hard problems sit downstream of it. Each one renders as a molecule, where atoms are concepts and bonds are dependency and control relationships.</p>
     <div class="rule"></div>
     <div class="metabar">
       <span><span class="k">Role</span>&nbsp; Design &amp; build</span><span class="sep">·</span>
@@ -68,23 +68,29 @@
   </div>
 
   <section class="body">
-    <h2>The problem</h2>
-    <p>Governed AI orchestration is a web of dependency and control relationships — the model interprets, the system validates, deterministic tools execute, logs prove. Most teaching material flattens that into prose, which loses exactly the structure that matters. I wanted a way to <em>see</em> how the pieces constrain each other.</p>
+    <h2>The argument</h2>
+    <p>Most AI curricula stop where the interesting part starts. Prompting, retrieval, agents, then a closing slide about responsible use. That ordering is fine if the goal is to build a demo. It is close to useless if the goal is to put a system into a bank, because in a bank the model is the cheap part and everything around it is the expensive part.</p>
+    <p>The series makes a specific claim: in regulated analytics, the difficulty is downstream of the model. Who owns the definition of the metric the system just quoted. Which dataset was certified and by whom. Who approves an action and on what evidence. What it costs per thousand queries and which budget absorbs that. How you explain any of it to an executive who has to sign. Twenty topics give those questions the same weight as the model itself, because that is the weight they carry in practice.</p>
 
-    <h2>Approach</h2>
-    <p>Each of the twenty topics is a 3D molecule. Atoms are concepts; bonds encode whether one concept depends on, or governs, another. You select an atom, read it, answer a recall check, and mark it learned — a focused way to study system design rather than skim it.</p>
+    <h2>The curriculum</h2>
+    <p>It runs from foundations into the parts that usually go missing. Fundamentals, structured outputs and JSON contracts, context engineering, retrieval and its limits, evaluation. Then risk and governance, prompt injection, tool calling, deterministic execution. Then the layer almost nobody teaches: data governance in the BI stack, the semantic layer and metric registry, orchestration, observability, token economics, human-in-the-loop design, product management, enterprise architecture, local and open-source deployment, and communicating AI systems to the people who authorise them.</p>
+    <p>Where I have a view, the series takes a position rather than surveying options. Retrieval is treated as a policy question before a similarity question. Evaluation is treated as a release gate rather than a report. Cost is treated as an architectural constraint rather than a finance concern. Those are arguments, and they are the ones I would defend in a design review.</p>
+
+    <h2>Why molecules</h2>
+    <p>Each topic renders as a 3D molecule. Atoms are concepts, bonds encode whether one concept depends on or governs another. That is not decoration. The thing that makes governed orchestration hard to teach is precisely the structure, which concept constrains which, and prose flattens exactly that. Selecting an atom, reading it, answering a recall check and marking it learned is slower than skimming, which is the point.</p>
     <ul>
       <li>Concepts as atoms, control and dependency relationships as bonds.</li>
       <li>Per-atom recall checks with local progress tracking.</li>
-      <li>Self-contained pages — no external dependencies, works offline.</li>
+      <li>Self-contained pages, no external dependencies, works offline.</li>
     </ul>
 
-    <h2>Architecture</h2>
-    <p>The twenty pages aren’t hand-authored. They’re produced by a generator: a shared engine template, one typed data module per topic, and a build script that assembles them. Adding or correcting a topic means editing structured data, not copy-pasting HTML — which is the only way twenty consistent, maintainable pages stay consistent and maintainable.</p>
-    <div class="figure">engine template · typed per-topic data modules · build script</div>
+    <h2>How it is built</h2>
+    <p>The twenty pages are not hand-authored. A generator assembles them from a shared engine template and one typed data module per topic, so adding or correcting a topic means editing structured data rather than copy-pasting HTML. That is the only way twenty pages stay consistent once you are past the first five.</p>
+    <p>Every build runs integrity checks before a page ships: brace balance, atom uniqueness, bond integrity, learning-path continuity, required keys, category coverage and a JavaScript syntax pass. A series arguing that structured claims should be validated structurally would look silly not validating itself. Sixteen of the twenty topics are built.</p>
+    <div class="figure">engine template · typed per-topic data modules · build script · integrity checks</div>
 
     <h2>What it demonstrates</h2>
-    <p class="q">Two things at once. Command of the subject — teaching a system is the real test of understanding it. And engineering discipline — a data-driven generator rather than twenty duplicated files. It’s also where I practise translating dense technical material into something a non-technical reader can follow.</p>
+    <p class="q">This is where I put the domain view in writing. The code on this site shows I can build the thing; the series shows I know which parts of it matter in a regulated institution and why, which is the half that is harder to demonstrate from a repository. Teaching a system is also the honest test of understanding it, and the gaps show up fast. The pages double as the surface I drive with the projector and gesture rig in the Lab, so a topic can be walked through on a wall by hand rather than clicked at a desk.</p>
   </section>
 
   <footer>

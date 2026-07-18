@@ -4,51 +4,56 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Governed NL→SQL Agent — Augusto Peña</title>
-<meta name="description" content="A natural-language-to-SQL agent where the model interprets and deterministic code executes, validates, and logs — built for regulated finance.">
+<meta name="description" content="A governed natural-language-to-SQL pipeline: retrieval-grounded drafting, deterministic validation, policy enforcement and a full audit trail, with three interchangeable model backends.">
 <style>
   :root{
     --ink:#0c1420; --panel:#101b29; --bone:#e4eaf1; --muted:#7d8a9b;
     --slate:#8aa6c0; --ice:#7db3d8; --line:#22303f;
     --serif:Georgia,'Iowan Old Style',serif;
-    --sans:ui-sans-serif,system-ui,-apple-system,sans-serif;
     --mono:'SF Mono',ui-monospace,Menlo,Consolas,monospace;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
   body{background:var(--ink);color:var(--bone);font-family:var(--serif);-webkit-font-smoothing:antialiased;line-height:1.5}
   .wrap{max-width:42rem;margin:0 auto;padding:0 1.5rem}
-
   header{display:flex;justify-content:space-between;align-items:center;padding:1.6rem 0;border-bottom:1px solid var(--line)}
   .mark{font-size:1rem;letter-spacing:-.01em;text-decoration:none;color:var(--bone)}
   .back{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);text-decoration:none}
   .back:hover{color:var(--ice)}
-
   .head{padding:3rem 0 0;opacity:0;transform:translateY(8px);animation:rise .9s cubic-bezier(.2,.7,.2,1) .1s forwards}
   .cat{font-family:var(--mono);font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ice);margin-bottom:1.1rem}
   h1{font-size:clamp(1.9rem,6vw,2.6rem);font-weight:400;letter-spacing:-.02em;line-height:1.08}
-  .lede{font-family:var(--serif);color:var(--muted);font-size:1.05rem;line-height:1.6;margin-top:1rem;max-width:56ch}
+  .lede{color:var(--muted);font-size:1.05rem;line-height:1.6;margin-top:1rem;max-width:56ch}
   .rule{height:1px;margin:1.6rem 0;background:linear-gradient(90deg,var(--ice) 0%,rgba(125,179,216,.4) 45%,rgba(125,179,216,0) 100%)}
-
   .metabar{font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;color:var(--slate);text-transform:uppercase;display:flex;flex-wrap:wrap;gap:.4rem 0;line-height:1.9}
   .metabar .k{color:var(--muted)}
   .metabar a{color:var(--bone);text-decoration:none;border-bottom:1px solid var(--ice);padding-bottom:1px}
   .metabar a:hover{color:var(--ice)}
   .metabar .sep{color:var(--line);margin:0 .7rem}
-
   section.body{padding:2.4rem 0}
   section.body h2{font-family:var(--mono);font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);font-weight:400;margin:2rem 0 .9rem}
   section.body h2:first-child{margin-top:0}
-  section.body p{font-family:var(--serif);color:var(--bone);font-size:1rem;line-height:1.75;margin-bottom:1rem;max-width:58ch}
+  section.body p{font-size:1rem;line-height:1.75;margin-bottom:1rem;max-width:58ch}
   section.body p.q{color:var(--muted)}
-  ul{list-style:none;font-family:var(--serif);font-size:1rem;line-height:1.7;max-width:58ch;margin-bottom:1rem}
-  ul li{padding-left:1.3rem;position:relative;margin-bottom:.5rem;color:var(--bone)}
+  ul{list-style:none;font-size:1rem;line-height:1.7;max-width:58ch;margin-bottom:1rem}
+  ul li{padding-left:1.3rem;position:relative;margin-bottom:.5rem}
   ul li::before{content:"→";position:absolute;left:0;color:var(--ice)}
-
   .figure{border:1px solid var(--line);border-radius:6px;background:var(--panel);padding:2.6rem 1.5rem;text-align:center;font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:1.4rem 0}
+
+  /* pipeline strip */
+  .pipe{border:1px solid var(--line);border-radius:6px;background:var(--panel);padding:1.3rem 1.2rem;margin:1.4rem 0;
+    font-family:var(--mono);font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;line-height:2.1;color:var(--bone)}
+  .pipe .arw{color:var(--ice);margin:0 .5rem}
+  .pipe .llm{color:var(--slate)}
+
+  .steps{counter-reset:s;list-style:none;margin:1.2rem 0;max-width:58ch}
+  .steps li{position:relative;padding-left:2.4rem;margin-bottom:1rem;font-size:1rem;line-height:1.7}
+  .steps li::before{counter-increment:s;content:counter(s,decimal-leading-zero);position:absolute;left:0;top:.15rem;
+    font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;color:var(--ice)}
+  .steps b{font-weight:400;color:var(--bone);border-bottom:1px solid var(--line)}
 
   footer{padding:2.4rem 0 3.2rem;border-top:1px solid var(--line);font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;color:var(--muted);display:flex;justify-content:space-between;flex-wrap:wrap;gap:.8rem}
   footer a{color:var(--bone);text-decoration:none;border-bottom:1px solid var(--ice);padding-bottom:1px}
-
   @keyframes rise{to{opacity:1;transform:none}}
   @media(prefers-reduced-motion:reduce){.head{animation:none;opacity:1;transform:none}}
   :focus-visible{outline:2px solid var(--ice);outline-offset:3px}
@@ -65,35 +70,57 @@
   <div class="head">
     <p class="cat">Structured data · Agent</p>
     <h1>Governed NL→SQL Agent</h1>
-    <p class="lede">Ask a question in plain language; get a validated, logged SQL answer. The model interprets — deterministic code executes.</p>
+    <p class="lede">Ask a question in plain language. The answer comes back grounded, validated, policy-checked, executed deterministically and logged end to end, on whichever of three model backends you pick.</p>
     <div class="rule"></div>
     <div class="metabar">
-      <span><span class="k">Role</span>&nbsp; Design &amp; build</span><span class="sep">·</span>
-      <span><span class="k">Stack</span>&nbsp; Python, SQL, LLM orchestration</span><span class="sep">·</span>
-      <span><a href="#">Code ↗</a></span><span class="sep">·</span>
-      <span><a href="#">Live demo ↗</a></span>
+      <span><span class="k">Role</span>&nbsp; Architecture &amp; build</span><span class="sep">·</span>
+      <span><span class="k">Stack</span>&nbsp; Python, Pydantic, DuckDB, FastAPI, RAG, multi-backend orchestration</span><span class="sep">·</span>
+      <span><a href="https://github.com/augustopch/nl-sql-agent">Code ↗</a></span><span class="sep">·</span>
+      <span><a href="https://nlsql.augustopena.io">Live demo ↗</a></span>
     </div>
   </div>
 
   <section class="body">
     <h2>The problem</h2>
-    <p>Natural-language querying is compelling, but in regulated finance you cannot ship a black box that writes and runs its own SQL against production data. Every answer has to be explainable, reproducible, and logged. The interesting question isn’t “can an LLM write SQL” — it’s “how do you let it help without handing it the keys.”</p>
+    <p>Natural-language querying is appealing, but in regulated finance you cannot ship a black box that writes and runs its own SQL against real data. Every answer has to be grounded in the actual schema, checked before it executes, constrained by who is allowed to see what, and reconstructable afterwards. Whether a model can write SQL was never the hard part. Letting it help without handing over the keys is.</p>
 
-    <h2>Approach</h2>
-    <p>The core stance is a division of labour: <strong>the model interprets, deterministic code executes.</strong> The LLM classifies intent and drafts a candidate query. From there, ordinary Python and SQL take over — the parts you can test, prove, and audit.</p>
+    <h2>The pipeline</h2>
+    <p>The model occupies one stage out of six. What comes before grounds the request, what comes after constrains and records the result.</p>
+    <div class="pipe">
+      RAG (schema + examples)<span class="arw">→</span><span class="llm">LLM</span><span class="arw">→</span>Deterministic validation<span class="arw">→</span>Governed policy retrieval<span class="arw">→</span>SQL<span class="arw">→</span>Audit
+    </div>
+    <ol class="steps">
+      <li><b>Retrieval grounds the request.</b> The relevant schema and curated query examples are retrieved and packed into context, so the model drafts against the real data model instead of guessing at it.</li>
+      <li><b>The model interprets.</b> Its only output is a schema-checked plan object: an intent classification (query, out of scope, or refused), the candidate SQL, the tables it touches, and any assumptions it had to make. Nothing outside that contract is accepted. It proposes. It never executes.</li>
+      <li><b>Deterministic validation.</b> Five gates run in ordinary code: single statement only, read-only, a fail-closed table allowlist, a mandatory row limit, and an EXPLAIN dry run against the engine. A failure stops the request rather than being retried into compliance.</li>
+      <li><b>Governed policy retrieval.</b> The applicable access and usage policy is fetched and enforced against the validated query: read-only surfaces, permitted tables and columns, scope limits.</li>
+      <li><b>Execution.</b> Only a plan that cleared both layers runs, against a read-only DuckDB connection.</li>
+      <li><b>Audit.</b> Retrieved context, the model draft, every individual gate result, the policy applied, the final query and the result shape are appended to a JSONL trail you can replay after the fact.</li>
+    </ol>
+
+    <h2>Why these gates and not others</h2>
+    <p>The gates are not a generic hardening checklist. Each one answers a question I used to be on the other side of, and anyone who has sat in a model risk or controls review will recognise the shape of them.</p>
     <ul>
-      <li>Intent classification and query drafting handled by the model, constrained to a known schema.</li>
-      <li>Generated SQL passed through deterministic validation before it ever touches the database.</li>
-      <li>Read-only execution against a scoped surface — no writes, no unbounded scans.</li>
-      <li>Every step — prompt, draft, validation result, final query, rows returned — written to an audit log.</li>
+      <li><em>Can it change anything?</em> Read-only and single-statement, so the blast radius of a bad generation is a failed query rather than a mutated table.</li>
+      <li><em>What can it reach?</em> A fail-closed allowlist, because a control that defaults to permitted is not a control. New table, no access, until someone decides otherwise.</li>
+      <li><em>Can it run away?</em> A mandatory row limit and a dry run before execution, so cost and load stay bounded and predictable.</li>
+      <li><em>Can you show me what happened?</em> An append-only trail with every gate result, because in a regulated review the answer alone is worth very little without the path that produced it.</li>
     </ul>
+    <p>The point I care about is the ordering. Governance decided the architecture rather than being applied to it afterwards, which is the difference between a system that passes review and one that gets rebuilt after it.</p>
 
-    <h2>Architecture</h2>
-    <p>A thin orchestration layer routes each request through interpret → validate → execute → log. The model never runs anything directly; it proposes, and the deterministic pipeline disposes. That boundary is the whole design, and it’s what makes the system defensible in a regulated setting.</p>
-    <div class="figure">Architecture diagram — interpret · validate · execute · log</div>
+    <h2>Tested against attack, not just happy paths</h2>
+    <p>A governance layer that has only been tried on well-behaved questions has not been tested. The suite here attacks it: SQL smuggled through the plan object, attempts to read the local filesystem, writes and schema changes dressed up as questions, and queries aimed at tables outside the allowlist. Eleven of eleven gates hold.</p>
+    <p>Refusal is part of the contract rather than an error case. When a request cannot be answered within policy, the system declines deterministically instead of improvising something close enough. The demo runs on a synthetic set of 5,000 transactions with roughly 1,500 flagged, so the questions are the kind a financial-crime analyst would actually ask.</p>
+
+    <h2>Three interchangeable backends</h2>
+    <p>The live demo lets you swap the model between GLM 5.2, GPT-5.5 and an Ollama-hosted Qwen3.5 4B running locally, then send the same question through the same pipeline.</p>
+    <p>That switch is the point. Swapping the model changes nothing about the governance layer: same grounding, same validation, same policy enforcement, same audit trail. Quality and latency move. The controls stay put. It also shows that a 4B model on local hardware is a serious option once the pipeline around it is doing the real work, which matters when data cannot leave the building.</p>
+    <p>Backend choice turned into a hard number early. On the same smoke test, a hosted frontier API answered in 1.6 seconds, a warm local model in 11.6, and one free tier at 127.5, which ruled it out of the demo entirely. Measuring it beat guessing at it.</p>
+    <div class="figure">Demo: backend selector, generated query, per-gate result chips, audit trail</div>
+    <p>The web demo shows each pipeline stage as it runs, with a green or red chip per gate, so the governance is the visible part rather than a claim in the README. Access sits behind signed expiring tokens, because a public inference endpoint with no gate is somebody else's free compute.</p>
 
     <h2>What it demonstrates</h2>
-    <p class="q">This is the atomic unit the rest of my work is built on. It shows LLM flexibility without surrendering auditability — the exact trade a bank’s controls function needs met before natural-language tooling can go near real data. The same pattern scales up into the multi-agent AML assistant.</p>
+    <p class="q">This is the unit the rest of my work is built on, and it is deliberately the first block of <a href="ask-agus.html" style="color:var(--bone);border-bottom:1px solid var(--ice);text-decoration:none">Ask AGUS</a> rather than a standalone demo. Build the governed structured-data agent first, prove it holds under attack, then add agents around it. It also settles the trade a controls function needs met before natural-language tooling goes near real data: flexibility at the top, deterministic authority underneath, and a record that proves what happened.</p>
   </section>
 
   <footer>
