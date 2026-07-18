@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Smart Band Controller — Augusto Peña</title>
-<meta name="description" content="A wrist-worn IMU controller and camera hand-tracking rig for driving a wall-projected thinking surface by gesture — an interactive memory palace you navigate in the air, untethered from the keyboard.">
+<meta name="description" content="A wrist-worn IMU controller and camera hand-tracking rig for driving a wall-projected thinking surface by gesture. An interactive memory palace you navigate in the air, untethered from the keyboard.">
 <style>
   :root{
     --ink:#0c1420; --panel:#101b29; --bone:#e4eaf1; --muted:#7d8a9b;
@@ -58,34 +58,43 @@
   <div class="head">
     <p class="cat">Computer vision · Embedded</p>
     <h1>Smart Band Controller</h1>
-    <p class="lede">A wrist-worn motion controller for driving a wall-projected thinking surface by gesture — so a visual memory palace isn’t tied to a keyboard, and you can work the whole wall from across the room.</p>
+    <p class="lede">Hands-free control of a wall-projected thinking surface, so the interface moves onto the wall and the laptop stops being the thing that keeps me in a chair.</p>
     <div class="rule"></div>
     <div class="metabar">
       <span><span class="k">Role</span>&nbsp; Design &amp; build</span><span class="sep">·</span>
-      <span><span class="k">Stack</span>&nbsp; MediaPipe, IR camera, ESP32, BNO055 IMU, BLE</span><span class="sep">·</span>
+      <span><span class="k">Stack</span>&nbsp; MediaPipe, 850nm IR camera, Wiimote, ESP32, BNO055 IMU, Bluetooth</span><span class="sep">·</span>
       <span><span class="wip">● Building Mark II</span></span>
     </div>
   </div>
 
   <section class="body">
     <h2>The idea</h2>
-    <p>I think associatively and spatially — across domains, by laying things next to each other. A large projected canvas is the right surface for that: an interactive whiteboard, a memory palace you can actually walk up to. But keyboard and mouse tether you to the desk and collapse that space back into a screen. The goal here is to stand back and manipulate the projected wall directly, in the air — closer to how you’d move things on a physical board than drive an application.</p>
-    <p>To be clear about scope: this isn’t about generating content — voice and AI agents already handle that. It’s the opposite problem — an external surface for <em>thinking visually</em>, navigated by hand.</p>
+    <p>I already work standing. I pace when I think, I run meetings in a room rather than at a desk, and I keep a whiteboard four metres wide at home because ideas make more sense to me laid out next to each other than stacked in a window. The laptop is the part that does not fit. It is where the power and the compute live, and it is also the thing that pulls me back into a chair.</p>
+    <p>So the goal is not a gadget. It is to keep the laptop as the engine and move the interface onto the wall: a projected surface I can walk up to, point at and rearrange, closer to working a physical board than driving an application.</p>
+    <p>On scope, since this is easy to misread: it is not about generating content. Voice and AI agents already do that well. This is the opposite problem, an external surface for thinking visually, navigated by hand.</p>
 
-    <h2>Approach</h2>
-    <p>Two input paths feed the same control layer. A camera tracks hand landmarks with MediaPipe; an IR night-vision camera keeps that working in a darkened projection room. And a wrist-worn band — an ESP32 with a BNO055 IMU — reads orientation and motion directly, so control doesn’t depend on staying in frame and gains precise tilt and rotation.</p>
+    <h2>What works today</h2>
+    <p>Hand tracking runs on MediaPipe through an 850nm IR camera with automatic IR-cut switching, which turned out to matter more than the resolution did. A normal webcam degrades badly in a dark projection room. The IR camera stays smooth. A Wiimote handles coarse navigation and clicking through a keyboard-emulation layer.</p>
     <ul>
-      <li>MediaPipe hand tracking over an IR camera for low-light projection rooms.</li>
-      <li>Wrist band: ESP32 + BNO055 IMU streaming orientation over Bluetooth (Mark II, in progress).</li>
-      <li>A deterministic gesture-to-action layer: pan, zoom, select, and move nodes on the projected canvas.</li>
+      <li>The camera works best close to the hands. At distance a 140 degree lens bends the geometry enough to hurt tracking.</li>
+      <li>Reliability falls off outside the centre of the IR cone, so placement is a real constraint rather than a detail.</li>
+      <li>Aiming the camera at the hands, below face height, is the right geometry. Eyes are the IR exposure question worth taking seriously, not skin.</li>
     </ul>
 
-    <h2>Where it’s at</h2>
-    <p>The camera-and-projection rig works today; the Mark II wristband — the ESP32 + IMU controller that makes it precise and untethered — is the piece I’m building now. The end state is a wall you drive with your hands: pull a cluster of ideas closer, push another away, arrange a thought like it’s a physical object.</p>
-    <div class="figure">Demo video — gesture control of the projected wall (coming)</div>
+    <h2>Mark II: the wrist controller</h2>
+    <p>The next version replaces the Wiimote with a wrist-worn band built on an ESP32 and a BNO055 IMU, streaming orientation over Bluetooth. It is worth being precise about what it replaces. The IMU takes the Wiimote's slot, a worn controller with motion and buttons. It does not replace the camera, which still supplies absolute position and always will, because an IMU drifts. The two are complementary rather than competing, and the Wiimote keeps its own job driving the music visualizer.</p>
+    <p>None of this is plug and play. It needs firmware on the ESP32 to read the sensor and a receiver on the laptop to interpret it, which is roughly the same amount of work the camera pipeline took.</p>
+
+    <h2>Why the mapping lives in code</h2>
+    <p>The Wiimote's personalization lived in a config screen and could only emit what that screen offered. Here the receiver script is the personalization layer, so a gesture maps to whatever can be expressed in code: press a key, move the cursor, call an API, run a script. The gesture vocabulary is mine to invent rather than to pick from a dropdown.</p>
+    <p>That also makes profiles possible. The same band means different things depending on the mode: flick to advance a slide when presenting, flick to move between atoms inside a molecule page, flick to switch windows at the desktop. One device, several vocabularies, switched deliberately.</p>
+    <div class="figure">Demo video: gesture control of the projected wall (coming)</div>
+
+    <h2>The honest version</h2>
+    <p>The wrist controller is the interesting part to build, which is exactly why it deserves scrutiny. Most of the actual benefit, being able to work while moving, comes from the projector and a voice layer, and I am most of the way there already. The IMU is a precision accent on top of that, not the thing that unlocks it. Naming that keeps the project honest about which parts are useful and which parts are just fun to solder.</p>
 
     <h2>What it demonstrates</h2>
-    <p class="q">Embedded firmware, computer vision, sensor fusion, and interaction design in one build — evidence that I work where software meets physical hardware, not just at the API. It’s the most personal thing here: a tool built to fit how my own mind works.</p>
+    <p class="q">Embedded firmware, computer vision, sensor fusion and interaction design in one build. Evidence that I work where software meets physical hardware rather than only at the API, and that I own the whole interpretation stack rather than configuring someone else's. It is also the most personal thing here, a tool shaped to fit how my own mind works.</p>
   </section>
 
   <footer>

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Music Visualizer — Augusto Peña</title>
-<meta name="description" content="Kaleidoscope — a local, capture-based WebGL audio visualizer for techno and psytrance projection, driven live by a Wii remote. Beat-locked and accessibility-first.">
+<meta name="description" content="Kaleidoscope, a local capture-based WebGL audio visualizer for techno and psytrance projection, driven live by a Wii remote. Beat-locked and accessibility-first.">
 <style>
   :root{
     --ink:#0c1420; --panel:#101b29; --bone:#e4eaf1; --muted:#7d8a9b;
@@ -57,11 +57,11 @@
   <div class="head">
     <p class="cat">Real-time graphics</p>
     <h1>Music Visualizer</h1>
-    <p class="lede">Kaleidoscope — a local, capture-based WebGL visualizer with six engines that folds live audio into projected geometry, beat-locked and driven by a Wii remote.</p>
+    <p class="lede">Kaleidoscope. A local, capture-based WebGL visualizer with six engines that folds live audio into projected geometry, beat-locked and driven by a Wii remote.</p>
     <div class="rule"></div>
     <div class="metabar">
       <span><span class="k">Role</span>&nbsp; Design &amp; build</span><span class="sep">·</span>
-      <span><span class="k">Stack</span>&nbsp; WebGL, Web Audio, Gamepad API</span><span class="sep">·</span>
+      <span><span class="k">Stack</span>&nbsp; WebGL1, Web Audio, WebHID, single-file vanilla JS</span><span class="sep">·</span>
       <span><a href="https://github.com/augustopch/music-visualizer">Code ↗</a></span><span class="sep">·</span>
       <span><a href="https://music-visualizer.augustopena.io">Live ↗</a></span>
     </div>
@@ -69,22 +69,30 @@
 
   <section class="body">
     <h2>Why it exists</h2>
-    <p>The first version pulled track data from a streaming API. That path closed when the provider tightened its terms — a clean reminder that anything built on someone else’s API is built on rented land. So I rebuilt it the way it should have been: no API, no account, no dependency. It captures whatever audio is already playing on the machine and turns it into visuals locally.</p>
+    <p>It began as a replacement for an old kaleidoscope app that had stopped keeping up. The obvious route was to pull track and beat data from the streaming service, except those audio endpoints had been deprecated, so there was no supported way in. That closed door turned out to be the better design. Instead of asking a service for metadata about the music, the visualizer captures the audio already leaving the machine and analyses it directly. No API, no account, no permission to revoke.</p>
 
-    <h2>Approach</h2>
-    <p>The browser captures system or tab audio, Web Audio analyses it in real time, and WebGL renders it across six switchable engines — kaleidoscope, tunnel, plasma, spectrum, starfield, fractal. It’s tuned for techno and psytrance on a projector: motion is <em>beat-locked</em> rather than strobing, so it moves with the music instead of flickering against it.</p>
+    <h2>How it works</h2>
+    <p>System or tab audio is captured through the browser, analysed by an FFT, and split into bass, mid and treble bands with separate kick detection. Rendering is WebGL1 with ping-pong feedback buffers in a two-pass simulation and display architecture, which is what gives the trails their persistence. Six engines share that pipeline: kaleidoscope, tunnel, plasma, a radial FFT spectrum, starfield and a Julia-set fractal, with smooth fades between them and optional auto-cycling.</p>
     <ul>
-      <li>Six real-time engines, hot-switchable, with auto-cycle and auto-evolve.</li>
-      <li>Wii remote control over Bluetooth — wave for energy, tilt to spin, buttons for engine and intensity.</li>
-      <li>Runs fully local: nothing recorded, nothing uploaded.</li>
+      <li>Captured audio is analysed only. It is never routed back to the output, so nothing doubles or echoes.</li>
+      <li>A single parameter object is the source of truth for every engine, which is what made adding external control cheap later.</li>
+      <li>Self-contained single file, no build step, running at 60fps on a 4GB laptop GPU driving a projector.</li>
     </ul>
 
     <h2>Designed for mixed neurotypes</h2>
-    <p>A room full of people doesn’t share one tolerance for visual intensity. Flash guard is on by default, an Intensity slider and a one-key “calm it down” let anyone dial the whole thing back instantly, and it avoids strobing by design. It’s explicit that this isn’t a photosensitive-epilepsy guarantee — the honest framing matters more than a false claim of safety.</p>
-    <div class="figure">Kaleidoscope running live — projected, Wii-driven</div>
+    <p>The room this runs in includes ADHD and autistic guests, so intensity control is a feature rather than an afterthought. Flash guard routes every kick through a smoothed pulse envelope instead of letting it hit brightness directly, and caps how fast brightness and hue can change. A master intensity slider scales all reactivity, and a calm key eases the whole system down over about a second and a half rather than snapping. The palette runs to deep blacks for a dark room, and the operating system reduced-motion setting is honoured on load.</p>
+    <p>The page says plainly that none of this is a photosensitive-epilepsy guarantee. A false claim of safety would be worse than no claim at all.</p>
+
+    <h2>Control</h2>
+    <p>A Wii Remote connects over WebHID for live control: accelerometer motion drives a wand energy value, tilt steers, buttons switch engines and intensity, and the remote rumbles on the beat. Getting there involved a genuinely instructive dead end. The newer Wii Remote Plus hardware does not pair cleanly with the Windows 11 Bluetooth stack, and a keyboard-emulation layer and direct WebHID access cannot hold the same device at once. Knowing which of those two paths you are on turns out to be most of the debugging.</p>
+    <div class="figure">Kaleidoscope running live: projected, Wii-driven</div>
+
+    <h2>Coming next: 2.5D scene mode</h2>
+    <p>A seventh engine, not yet built. Scene mode takes a still image and its depth map and turns it into a living painting: subtle parallax displacement, a slow breathing zoom, animated god-rays, and beat-reactive shimmer, crossfading between scenes. Depth maps are produced offline rather than at runtime, and the first scene is a dragon painting of my own, photographed, perspective-corrected and colour-graded for projector blacks.</p>
+    <p>The constraint is worth stating honestly, because it shapes the whole design. Realism has to come from imagery brought in, not from the GPU inventing it live. Real-time generative video synced to audio is not happening on a 4GB card, so the plan is stills with parallax first, with the door left open for pre-rendered video textures later. Every new effect still has to respect flash guard, which rules out the easiest ways to make something look impressive.</p>
 
     <h2>What it demonstrates</h2>
-    <p class="q">Real-time graphics and audio DSP, live hardware input over Bluetooth, and a bias toward local-first tools that don’t depend on a vendor’s goodwill. It’s the side of my work that builds for the room and the craft — and it pairs with the Smart Band Controller as the physical, gesture-driven end of what I make.</p>
+    <p class="q">Real-time graphics, audio DSP and live hardware input, plus a bias toward local-first tools that do not depend on a vendor keeping an endpoint open. The parts I care about are the boring ones: a single state object that made later integrations cheap, and accessibility constraints treated as architecture rather than a setting.</p>
   </section>
 
   <footer>
