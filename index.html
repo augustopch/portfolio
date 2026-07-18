@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Augusto Peña — Governed AI for Regulated Finance</title>
-<meta name="description" content="Augusto Peña — former securities regulator, now AI architect. Governed AI orchestration for regulated finance: auditable pipelines where models interpret and deterministic code executes.">
+<meta name="description" content="Augusto Peña, former securities regulator, now AI architect. Governed AI orchestration for regulated finance: auditable pipelines where models interpret and deterministic code executes.">
 <style>
   :root{
     --ink:#0c1420; --panel:#101b29; --bone:#e4eaf1; --muted:#7d8a9b;
@@ -32,6 +32,12 @@
   .hero h1{font-size:clamp(1.9rem,6.5vw,3.2rem);font-weight:400;letter-spacing:-.02em;line-height:1.08;max-width:20ch}
   .rule{height:1px;margin:1.5rem 0;background:linear-gradient(90deg,var(--ice) 0%,rgba(125,179,216,.4) 45%,rgba(125,179,216,0) 100%)}
   .hero p{font-family:var(--serif);color:var(--muted);font-size:1.05rem;line-height:1.6;max-width:52ch}
+  .facts{margin-top:1.9rem;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--slate);line-height:2.1;max-width:56ch}
+  .facts .sep{color:var(--line);margin:0 .55rem}
+  .principle{margin-top:1.6rem;font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;color:var(--muted);border-left:2px solid var(--ice);padding-left:.9rem;line-height:1.9}
+  .principle b{color:var(--bone);font-weight:400}
+  .proj.lab .title{font-size:1.12rem}
+  .proj.lab .desc{font-size:.9rem;margin:.4rem 0 .6rem}
 
   /* section heading */
   .sec{padding:2.4rem 0 .6rem}
@@ -108,9 +114,14 @@
 
       <section class="hero">
         <p class="eyebrow">Securities Regulator&nbsp;&nbsp;→&nbsp;&nbsp;AI Architect</p>
-        <h1>Governed AI orchestration for regulated finance</h1>
+        <h1>I build the AI systems for an industry I used to regulate.</h1>
         <div class="rule"></div>
-        <p>I design auditable pipelines where models interpret and deterministic code executes. The judgment of a former securities regulator, applied to how AI actually ships inside finance.</p>
+        <p>Governed AI orchestration for regulated finance: auditable pipelines where the model interprets and deterministic code executes, validates and logs. Most people in this field have the engineering or the domain. The work below is what happens when one person has both.</p>
+        <div class="facts">
+          Peru SMV, four years<span class="sep">·</span>IOSCO-aligned rule design<span class="sep">·</span>Fund authorization<span class="sep">·</span>Transaction-monitoring supervision<br>
+          AMLA 2026 delivery, architecture and data lead<span class="sep">·</span>Now AI automation at a global payments network
+        </div>
+        <div class="principle"><b>The LLM interprets. Deterministic code executes. Logs prove it.</b><br>Every system on this page is built on that boundary.</div>
       </section>
 
       <!-- WORK -->
@@ -119,45 +130,47 @@
       <a class="proj" href="work/governed-nl-sql.html">
         <div class="cat">Structured data · Agent</div>
         <div class="title">Governed NL→SQL Agent <span class="arrow">↗</span></div>
-        <p class="desc">A natural-language-to-SQL agent where the model only classifies intent and drafts candidate queries; deterministic Python and SQL handle execution, validation, and logging — every step auditable.</p>
-        <div class="meta">Python <span class="sep">·</span> SQL <span class="sep">·</span> <span class="badge">Code</span> <span class="sep">·</span> <span class="badge">Live demo soon</span></div>
+        <p class="desc">Retrieval grounds the request, the model drafts inside a fixed contract, five deterministic gates and a policy check stand between it and the database, and every stage is logged. Eleven of eleven gates hold under adversarial testing. Runs on three interchangeable backends, from a frontier API down to a 4B model on local hardware.</p>
+        <div class="meta">Python <span class="sep">·</span> RAG <span class="sep">·</span> Multi-backend <span class="sep">·</span> <span class="badge">Code</span> <span class="sep">·</span> <span class="badge">Live demo</span></div>
       </a>
 
       <a class="proj" href="work/molecular.html">
         <div class="cat">Teaching · Interactive</div>
         <div class="title">Molecular <span class="arrow">↗</span></div>
-        <p class="desc">A 20-part interactive series teaching governed AI orchestration for banking and payments analytics — built from a typed-data generator, not hand-authored pages.</p>
+        <p class="desc">Twenty interactive topics arguing that in regulated analytics the model is the cheap part and the hard problems sit downstream: metric ownership, certification, approval design, cost. Where I put the domain view in writing.</p>
         <div class="meta">Generator arch <span class="sep">·</span> Data modules <span class="sep">·</span> <span class="badge">Live</span></div>
       </a>
 
-      <a class="proj" href="work/aml-david.html">
+      <a class="proj" href="work/ask-agus.html">
         <div class="cat">Multi-agent system</div>
-        <div class="title">AML “David” <span class="arrow">↗</span></div>
-        <p class="desc">A governed multi-agent financial-crime research assistant: a supervisor delegating to retrieval, structured-data, and analytics sub-agents, with a validation judge and human-in-the-loop over an auditable trail.</p>
+        <div class="title">Ask AGUS <span class="arrow">↗</span></div>
+        <p class="desc">A governed multi-agent assistant for AML and financial-crime regulatory work: supervisor, retrieval, structured-data and analytics sub-agents, a validation judge and human-in-the-loop. Generalizes an approach proven on a live 2026 regulatory delivery.</p>
         <div class="meta">Multi-agent <span class="sep">·</span> RAG <span class="sep">·</span> <span class="badge wip">In progress</span></div>
       </a>
 
       <!-- LAB -->
       <div class="sec" id="lab"><h2>Lab</h2></div>
+      <p style="font-family:var(--serif);color:var(--muted);font-size:.95rem;line-height:1.6;max-width:56ch;margin:0 0 .4rem">Hardware and real-time graphics. Not the moat, but the reason I trust myself at the boundary where software meets physical things.</p>
 
-      <a class="proj" href="lab/smart-band.html">
+      <a class="proj lab" href="lab/smart-band.html">
         <div class="cat">Computer vision · Embedded</div>
         <div class="title">Smart Band Controller <span class="arrow">↗</span></div>
-        <p class="desc">Gesture and wearable control for wall projection — MediaPipe hand tracking and an IR night-vision camera, with an ESP32 + IMU wristband as the next-gen input.</p>
+        <p class="desc">Hands-free control of a wall-projected thinking surface. MediaPipe over an 850nm IR camera, with an ESP32 and BNO055 wristband as the programmable Mark II.</p>
         <div class="meta">MediaPipe <span class="sep">·</span> ESP32 <span class="sep">·</span> <span class="badge wip">WIP</span></div>
       </a>
 
-      <a class="proj" href="lab/visualizer.html">
+      <a class="proj lab" href="lab/visualizer.html">
         <div class="cat">Real-time graphics</div>
         <div class="title">Music Visualizer <span class="arrow">↗</span></div>
-        <p class="desc">A WebGL kaleidoscope for psytrance and techno projection, driven live by Wiimote and gesture input.</p>
+        <p class="desc">A local WebGL visualizer with six engines, built after a streaming API closed. Beat-locked rather than strobing, Wii-driven, designed for mixed neurotypes.</p>
         <div class="meta">WebGL <span class="sep">·</span> Wiimote <span class="sep">·</span> <span class="badge">Launch</span></div>
       </a>
 
       <!-- ABOUT -->
       <section class="about" id="about">
-        <p>I spent four years as a capital-markets regulator at Peru’s securities authority — designing IOSCO-aligned rules, authorizing funds, and supervising transaction monitoring — before moving into building AI systems for the same industry I used to oversee.</p>
-        <p>That combination is the point: deep, current LLM engineering paired with genuine regulated-finance domain authority. I build systems that are powerful because the model interprets, and trustworthy because deterministic code executes, validates, and logs.</p>
+        <p>I spent four years as a capital-markets regulator at Peru’s securities authority, designing IOSCO-aligned rules, authorizing funds and supervising transaction monitoring. Today my work is AI automation inside a global payments network: deciding what should be automated, designing the system that does it, and making sure someone can audit it afterwards.</p>
+        <p>That combination is the point. Current LLM engineering on one side, real regulated-finance domain knowledge on the other. The systems I build are useful because a model interprets, and trustworthy because deterministic code executes, validates and logs.</p>
+        <p>I think associatively and across domains, which is where most of my useful ideas come from: a pattern in one field turning out to be the answer in another. It is also why several projects here are about getting out of a chair and thinking in space, on a wall, by hand. I would rather build tools that fit how my mind works than keep paying the tax of fighting it.</p>
       </section>
 
       <footer class="foot">
