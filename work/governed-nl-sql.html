@@ -70,11 +70,11 @@
   <div class="head">
     <p class="cat">Structured data · Agent</p>
     <h1>Governed NL→SQL Agent</h1>
-    <p class="lede">Ask a question in plain language. The answer comes back grounded, validated, policy-checked, executed deterministically and logged end to end, on whichever of three model backends you pick.</p>
+    <p class="lede">Ask a question in plain language. Where a governed metric already exists the model never writes SQL at all. Where it does, five deterministic gates and a policy check stand between the draft and the database, and every stage is logged.</p>
     <div class="rule"></div>
     <div class="metabar">
       <span><span class="k">Role</span>&nbsp; Architecture &amp; build</span><span class="sep">·</span>
-      <span><span class="k">Stack</span>&nbsp; Python, Pydantic, DuckDB, FastAPI, RAG, multi-backend orchestration</span><span class="sep">·</span>
+      <span><span class="k">Stack</span>&nbsp; Python, Pydantic, DuckDB, FastAPI, semantic layer, RAG, multi-backend orchestration</span><span class="sep">·</span>
       <span><a href="https://github.com/augustopch/nl-sql-agent">Code ↗</a></span><span class="sep">·</span>
       <span><a href="https://nlsql.augustopena.io">Live demo ↗</a></span>
     </div>
@@ -85,18 +85,24 @@
     <p>Natural-language querying is appealing, but in regulated finance you cannot ship a black box that writes and runs its own SQL against real data. Every answer has to be grounded in the actual schema, checked before it executes, constrained by who is allowed to see what, and reconstructable afterwards. Whether a model can write SQL was never the hard part. Letting it help without handing over the keys is.</p>
 
     <h2>The pipeline</h2>
-    <p>The model occupies one stage out of six. What comes before grounds the request, what comes after constrains and records the result.</p>
+    <p>The model occupies one stage, and for a good share of questions it is skipped entirely. What comes before decides whether the model is needed at all; what comes after constrains and records the result.</p>
     <div class="pipe">
-      RAG (schema + examples)<span class="arw">→</span><span class="llm">LLM</span><span class="arw">→</span>Deterministic validation<span class="arw">→</span>Governed policy retrieval<span class="arw">→</span>SQL<span class="arw">→</span>Audit
+      Semantic layer<span class="arw">→</span>RAG (schema + examples)<span class="arw">→</span><span class="llm">LLM</span><span class="arw">→</span>Deterministic validation<span class="arw">→</span>Governed policy retrieval<span class="arw">→</span>SQL<span class="arw">→</span>Audit
     </div>
     <ol class="steps">
-      <li><b>Retrieval grounds the request.</b> The relevant schema and curated query examples are retrieved and packed into context, so the model drafts against the real data model instead of guessing at it.</li>
+      <li><b>The semantic layer answers first, if it can.</b> Questions that map to a certified metric are resolved against a governed definition rather than freshly authored SQL. The definition carries an owner, a version and an approved expression, so two people asking the same question get the same number and that number matches the one finance already published. Here the model selects a metric. It does not invent a calculation.</li>
+      <li><b>Retrieval grounds the rest.</b> The relevant schema and curated query examples are retrieved and packed into context, so the model drafts against the real data model instead of guessing at it.</li>
       <li><b>The model interprets.</b> Its only output is a schema-checked plan object: an intent classification (query, out of scope, or refused), the candidate SQL, the tables it touches, and any assumptions it had to make. Nothing outside that contract is accepted. It proposes. It never executes.</li>
       <li><b>Deterministic validation.</b> Five gates run in ordinary code: single statement only, read-only, a fail-closed table allowlist, a mandatory row limit, and an EXPLAIN dry run against the engine. A failure stops the request rather than being retried into compliance.</li>
       <li><b>Governed policy retrieval.</b> The applicable access and usage policy is fetched and enforced against the validated query: read-only surfaces, permitted tables and columns, scope limits.</li>
       <li><b>Execution.</b> Only a plan that cleared both layers runs, against a read-only DuckDB connection.</li>
       <li><b>Audit.</b> Retrieved context, the model draft, every individual gate result, the policy applied, the final query and the result shape are appended to a JSONL trail you can replay after the fact.</li>
     </ol>
+
+    <h2>Why a semantic layer changes the problem</h2>
+    <p>Text-to-SQL gives an agent access to data. It does not give it understanding of the business. In a warehouse where the same idea appears as a dozen similarly named columns and the same acronym means different things to treasury and retail, a fluent model will write confident SQL against the wrong one. The failure is not a syntax error you can catch. It is a plausible number nobody can reconcile.</p>
+    <p>Putting a semantic layer in front of the model reframes the job. For anything covered by a certified metric, the task becomes selection rather than authorship, which is a far smaller surface for a model to get wrong, and every answer traces back to a definition with an owner. The uncovered long tail still goes through the governed text-to-SQL path, with all the gates below applying. Two tiers, different risk, different treatment.</p>
+    <p>This is also the part most demos skip, because it is unglamorous and it is where the actual work in a bank lives.</p>
 
     <h2>Why these gates and not others</h2>
     <p>The gates are not a generic hardening checklist. Each one answers a question I used to be on the other side of, and anyone who has sat in a model risk or controls review will recognise the shape of them.</p>
@@ -113,8 +119,8 @@
     <p>Refusal is part of the contract rather than an error case. When a request cannot be answered within policy, the system declines deterministically instead of improvising something close enough. The demo runs on a synthetic set of 5,000 transactions with roughly 1,500 flagged, so the questions are the kind a financial-crime analyst would actually ask.</p>
 
     <h2>Three interchangeable backends</h2>
-    <p>The live demo lets you swap the model between GLM 5.2, GPT-5.5 and an Ollama-hosted Qwen3.5 4B running locally, then send the same question through the same pipeline.</p>
-    <p>That switch is the point. Swapping the model changes nothing about the governance layer: same grounding, same validation, same policy enforcement, same audit trail. Quality and latency move. The controls stay put. It also shows that a 4B model on local hardware is a serious option once the pipeline around it is doing the real work, which matters when data cannot leave the building.</p>
+    <p>The backend is swappable, and the demo currently runs on Qwen3.5 4B hosted locally through Ollama. That is a deliberate hold rather than a default I inherited: I want more testing before I claim a frontier model is doing anything the pipeline is not, and the same question can be sent through GLM 5.2 or a hosted commercial model without touching a line of the governance code.</p>
+    <p>That swap is the point. Changing the model changes nothing about the governance layer: same semantic resolution, same grounding, same validation, same policy enforcement, same audit trail. Quality and latency move. The controls stay put. Running on a four-billion-parameter model on a laptop is the sharper version of the argument, because if the scaffolding is doing the real work then the answer should hold, and if it only holds on a frontier model then the scaffolding was never the thing carrying it. That question is worth settling properly, which is why the small model stays in place until the evaluation says otherwise.</p>
     <p>Backend choice turned into a hard number early. On the same smoke test, a hosted frontier API answered in 1.6 seconds, a warm local model in 11.6, and one free tier at 127.5, which ruled it out of the demo entirely. Measuring it beat guessing at it.</p>
     <div class="figure">Demo: backend selector, generated query, per-gate result chips, audit trail</div>
     <p>The web demo shows each pipeline stage as it runs, with a green or red chip per gate, so the governance is the visible part rather than a claim in the README. Access sits behind signed expiring tokens, because a public inference endpoint with no gate is somebody else's free compute.</p>
